@@ -9,8 +9,9 @@ execute unless entity @s[tag=disguised] run {
     return 0
 }
 
-# Store previous disguise info for messages
-data modify storage skinwalker:temp DisguiseName set from entity @s DisguiseName
+# Store previous disguise info (name of player they were disguised as) for messages
+# This NBT tag "DisguisedAsName" should have been set on the skinwalker during copy_identity
+data modify storage skinwalker:temp TempDisguisedAsName set from entity @s DisguisedAsName
 
 # Visual and sound effects before removal
 execute at @s run {
@@ -30,13 +31,18 @@ tag @s remove disguised
 tag @s remove disguised_as
 
 # Reset appearance using Identity mod
-execute as @s run identity reset @s
+execute as @s run identity reset @s # This should reset skin and potentially nameplate
 
-# Restore original skin if available
-execute if data storage skinwalker:playerdata {UUID: 0} run {
+# Explicitly remove/reset CustomName and visibility, just in case 'identity reset' doesn't fully handle it
+data remove entity @s CustomName
+data modify entity @s CustomNameVisible set value 0b
+
+# Restore original skin if available - This section seems like a placeholder for a different skin system.
+# The 'identity reset @s' should be the primary mechanism.
+# execute if data storage skinwalker:playerdata {UUID: 0} run {
     # Code to restore original skin would go here
     # This would depend on your skin storage system
-}
+# }
 
 # Notify the player
 title @s title ["",{"text":"DISGUISE REMOVED","color":"red","bold":true}]
@@ -52,9 +58,9 @@ execute at @s run {
         {"text":"[","color":"dark_red"},
         {"text":"!","color":"red","bold":true},
         {"text":"] ","color":"dark_red"},
-        {"selector":"@s"},
+        {"storage":"skinwalker:temp","nbt":"TempDisguisedAsName","color":"yellow","interpret":true}, # Show who they were disguised as
         {"text":" has revealed their true form as a ","color":"red"},
-        {"text":"SKINWALKER!","color":"dark_red","bold":true}
+        {"text":"SKINWALKER!","color":"dark_red","bold":true,"italic":true}
     ]
     
     # Visual effects for nearby players
@@ -67,12 +73,33 @@ execute at @s run {
 # title @s title ["",{"text":"DISGUISE COOLDOWN","color":"gold"}]
 # title @s subtitle ["",{"text":"You can disguise again in 15 seconds","color":"yellow"}]
 
-# Clear any temporary data
-data remove entity @s DisguiseTarget # This seems like it should be DisguiseName or similar based on previous context
-data remove entity @s DisguiseName
+# Clear the stored name of who they were disguised as from their NBT
+data remove entity @s DisguisedAsName
+# Clear temp storage used for messaging
+data remove storage skinwalker:temp TempDisguisedAsName
+
 
 # Update action bar
 title @s actionbar ["",{"text":"Disguise removed! ","color":"red"},{"text":"Cooldown: ","color":"gray"},{"text":"15s","color":"gold"}]
 
 # Log the action in console
 tellraw @a[tag=op] ["",{"text":"[","color":"dark_gray"},{"text":"Skinwalker","color":"dark_red"},{"text":"] ","color":"dark_gray"},{"selector":"@s"},{"text":" removed their disguise","color":"gray"}]
+
+# --- Appended General Reset Commands ---
+# Attempt to clear skin from URL (e.g., for SkinsRestorer)
+skin clear @s
+
+# Attempt to unequip mob form (e.g., for Identity or LibsDisguises)
+identity unequip @s
+# LibsDisguises might use: /undisguise @s
+
+# Ensure specific disguise type tags are removed
+tag @s remove disguised_as_player
+tag @s remove disguised_as_mob
+
+# General 'disguised' tag and 'DisguisedAsName' NBT are already handled above.
+# CustomName and CustomNameVisible are also already handled above.
+
+# Final message, can be redundant if other messages are shown, but good as a catch-all.
+# tellraw @s {"text":"You have returned to your true form.","color":"yellow"}
+# The existing "DISGUISE REMOVED" title is probably sufficient.

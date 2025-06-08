@@ -52,24 +52,47 @@ execute as @p[limit=1,sort=nearest,distance=..5,team=!Skinwalker] at @s run {
         }
     }
     
-    # If not infected, deal damage and apply effects
-    damage @s 6 minecraft:player_attack
-    
-    # Apply slowness and weakness
-    effect give @s minecraft:slowness 5 1
-    effect give @s minecraft:weakness 5 0
-    effect give @s minecraft:glowing 5 0 true
-    
-    # Blood particles
-    particle minecraft:dust 1 0 0 1 ~ ~1 ~ 0.5 1 0.5 0.1 30 force
-    particle minecraft:damage_indicator ~ ~1 ~ 0.5 1 0.5 0.1 10 force
-    
-    # Message to victim
-    title @s title ["",{"text":"YOU'VE BEEN SLASHED!","color":"dark_red","bold":true}]
-    title @s subtitle ["",{"text":"You feel the infection spreading...","color":"red"}]
-    
-    # Play hurt sound to victim
-    playsound minecraft:entity.player.hurt player @s ~ ~ ~ 1 1
+    # If not instantly converted (and not a YouTuber who is immune to this path), apply timed infection
+    # Ensure target is not already recently_infected to avoid resetting timer / spamming.
+    execute if entity @s[tag=!youtuber,tag=!recently_infected] run {
+        tag @s add recently_infected
+        scoreboard players set @s skinwalker.infection_timer 600 # 30 seconds (600 ticks)
+
+        # Message to victim about timed infection
+        title @s title ["",{"text":"YOU ARE INFECTED!","color":"red","bold":true}]
+        title @s subtitle ["",{"text":"The infection will consume you in 30 seconds!","color":"dark_red"}]
+        playsound minecraft:entity.zombie.infect player @s ~ ~ ~ 1 1
+
+        # Message to the attacking Skinwalker (outer @s)
+        tellraw @p[distance=..1] {"text":"You have infected ","color":"green","italic":true},{"selector":"@s","color":"red","italic":true},{"text":"!","color":"green","italic":true}
+
+        # Standard attack effects (damage, particles, etc.) still apply
+        damage @s 6 minecraft:player_attack # Deal damage
+        effect give @s minecraft:slowness 5 1 # Apply slowness
+        effect give @s minecraft:weakness 5 0 # Apply weakness
+        particle minecraft:dust 1 0 0 1 ~ ~1 ~ 0.5 1 0.5 0.1 30 force # Blood particles
+        particle minecraft:damage_indicator ~ ~1 ~ 0.5 1 0.5 0.1 10 force
+    } else if entity @s[tag=youtuber] run {
+        # YouTubers are not infected by this specific timed mechanism, but still take damage from the claw use
+        damage @s 6 minecraft:player_attack # Deal damage
+        effect give @s minecraft:slowness 5 1 # Apply slowness
+        effect give @s minecraft:weakness 5 0 # Apply weakness
+        particle minecraft:dust 1 0 0 1 ~ ~1 ~ 0.5 1 0.5 0.1 30 force # Blood particles
+        particle minecraft:damage_indicator ~ ~1 ~ 0.5 1 0.5 0.1 10 force
+        title @s title ["",{"text":"YOU'VE BEEN SLASHED!","color":"dark_red","bold":true}]
+        title @s subtitle ["",{"text":"You resisted the infection!","color":"green"}]
+        playsound minecraft:entity.player.hurt player @s ~ ~ ~ 1 1
+    } else if entity @s[tag=recently_infected] run {
+        # If already infected, just apply damage and effects
+        damage @s 6 minecraft:player_attack # Deal damage
+        effect give @s minecraft:slowness 5 1 # Apply slowness
+        effect give @s minecraft:weakness 5 0 # Apply weakness
+        particle minecraft:dust 1 0 0 1 ~ ~1 ~ 0.5 1 0.5 0.1 30 force # Blood particles
+        particle minecraft:damage_indicator ~ ~1 ~ 0.5 1 0.5 0.1 10 force
+        title @s title ["",{"text":"SLASHED AGAIN!","color":"dark_red","bold":true}]
+        title @s subtitle ["",{"text":"The infection deepens...","color":"red"}]
+        playsound minecraft:entity.player.hurt player @s ~ ~ ~ 1 1
+    }
 }
 
 # Play sound effects

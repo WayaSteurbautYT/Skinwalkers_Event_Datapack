@@ -1,13 +1,27 @@
-# Handle right-click with Disguise Compass
-# This is triggered when a player right-clicks with a compass that has the disguise tag
+# Function: skinwalker:items/use_disguise_compass
+# Item: carrot_on_a_stick{CustomModelData:1003}
+# Called by: skinwalker:game/handle_item_clicks
+# Action: Presents a disguise menu to the Skinwalker.
 
-execute as @s[tag=Skinwalker] run {
-    # Check cooldown
-    execute unless score @s skinwalker.disguise_cooldown matches 1.. run function skinwalker:abilities/disguise/use
-    
-    # If on cooldown, show message
-    execute if score @s skinwalker.disguise_cooldown matches 1.. run tellraw @s ["",{"text":"[ABILITY]","color":"dark_aqua"}," ",{"text":"Disguise is on cooldown for ","color":"red"},{"score":{"name":"@s","objective":"skinwalker.disguise_cooldown"},"color":"aqua"}," ",{"text":"seconds","color":"red"}]
-}
+# Ensure the user is a skinwalker and cooldown is ready
+execute unless entity @s[tag=skinwalker] run return 0
+execute if score @s skinwalker.cooldown.disguise matches 1.. run tellraw @s {"text":"Disguise ability is on cooldown!","color":"red"}
+execute if score @s skinwalker.cooldown.disguise matches 1.. run return 0
 
-# If not a Skinwalker, show error message
-execute as @s[tag=!Skinwalker] run tellraw @s ["",{"text":"[ERROR]","color":"red"}," ",{"text":"Only Skinwalkers can use this item!","color":"white"}]
+# Set cooldown (60 seconds = 1200 ticks)
+# This cooldown is set upfront. If they cancel, it's refunded.
+# If they choose an option that leads to another menu, that menu should not set this again.
+# If they successfully disguise, this cooldown remains.
+scoreboard players set @s skinwalker.cooldown.disguise 1200
+
+# Set a short timer for how long this menu interaction itself can last, or a flag.
+# For now, let's assume immediate choice or they can re-open.
+
+tellraw @s {"text":"Choose your disguise type:","color":"gold"}
+tellraw @s ["",{"text":"[1] Copy Nearby Player","color":"aqua","clickEvent":{"action":"run_command","value":"/function skinwalker:abilities/disguise/initiate_copy_nearby"}}]
+tellraw @s ["",{"text":"[2] Select Specific Skin (URL)","color":"light_purple","clickEvent":{"action":"run_command","value":"/function skinwalker:abilities/disguise/menu_select_specific_skin"}}]
+tellraw @s ["",{"text":"[3] Select Mob Form","color":"green","clickEvent":{"action":"run_command","value":"/function skinwalker:abilities/disguise/menu_select_mob_form"}}]
+tellraw @s ["",{"text":"[Cancel]","color":"red","clickEvent":{"action":"run_command","value":"/function skinwalker:abilities/disguise/cancel_disguise_choice"}}]
+
+# Play a sound
+playsound minecraft:item.book.page_turn master @s ~ ~ ~ 1 1.2

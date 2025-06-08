@@ -36,6 +36,8 @@ execute if score #tick skinwalker.temp matches ..0 run {
 # Consider changing the trigger from #tick..0 to a less frequent but regular interval if needed.
 execute if score #tick skinwalker.temp matches ..0 run function skinwalker:gui/update_actionbar
 
+function skinwalker:game/handle_item_clicks
+
 # Handle disguise timers (every second)
 execute if score #tick skinwalker.temp matches ..0 if entity @a[tag=disguised] run {
     function skinwalker:abilities/disguise/check_disguise_timer
@@ -47,7 +49,7 @@ execute as @a run {
     execute if score @s skinwalker.claws_cooldown matches 1.. run scoreboard players remove @s skinwalker.claws_cooldown 1
     
     # Decrement phase shift cooldown
-    execute if score @s skinwalker.phase_cooldown matches 1.. run scoreboard players remove @s skinwalker.phase_cooldown 1
+    execute if score @s skinwalker.cooldown.phase matches 1.. run scoreboard players remove @s skinwalker.cooldown.phase 1
     
     # Decrement disguise cooldown
     execute if score @s skinwalker.disguise_cooldown matches 1.. run scoreboard players remove @s skinwalker.disguise_cooldown 1
@@ -63,9 +65,17 @@ execute if score #tick skinwalker.temp matches 0 run function skinwalker:game/ch
 execute as @a[tag=recently_infected] run {
     scoreboard players remove @s infection_timer 1
     execute if score @s infection_timer matches ..0 run {
-        tag @s remove recently_infected
+        # First, call the full conversion function
+        function skinwalker:convert_to_skinwalker
+
+        # Original effects/messages can remain or be adjusted if convert_to_skinwalker handles them
+        tag @s remove recently_infected # convert_to_skinwalker should ideally handle this if it's a general "become skinwalker" script
+
         title @s title ["",{"text":"INFECTION COMPLETE","color":"dark_red","bold":true}]
-        title @s subtitle ["",{"text":"You are now a full Skinwalker!","color":"red"}]
+        # This title might be redundant if convert_to_skinwalker has its own.
+        # title @s subtitle ["",{"text":"You are now a full Skinwalker!","color":"red"}] # Also potentially redundant
+
+        # These effects might be specific to "infection completion" bonus vs standard skinwalker setup
         effect give @s minecraft:strength 10 0 true
         effect give @s minecraft:speed 10 0 true
     }

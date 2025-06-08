@@ -51,6 +51,10 @@ execute if score #playerCount playerCount matches 4.. run {
     execute as @a[tag=!youtuber,tag=!skinwalker] run function skinwalker:roles/become_survivor
 }
 
+# Assign tasks based on roles
+execute as @a[tag=survivor] run function skinwalker:tasks/assign_tasks
+execute as @a[tag=youtuber] run function skinwalker:assign_youtuber_tasks
+
 # Set up teams
 execute as @a[tag=survivor] run team join Survivor @s
 execute as @a[tag=skinwalker] run team join Skinwalker @s

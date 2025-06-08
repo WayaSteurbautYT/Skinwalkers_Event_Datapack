@@ -20,6 +20,15 @@ scoreboard objectives add skinwalker.ability_duration dummy "Ability Duration"
 scoreboard objectives add skinwalker.temp dummy "Temp"
 scoreboard objectives add skinwalker.gamemode_selected dummy "Selected Gamemode"
 scoreboard objectives add open_player_hub trigger "Open Player Hub" # New GUI Trigger
+scoreboard objectives add sw.item_click minecraft.used:minecraft.carrot_on_a_stick "SW ItemClick"
+
+# Specific ability cooldowns and max values
+scoreboard objectives add skinwalker.cooldown.phase dummy "Phase Cooldown"
+scoreboard objectives add skinwalker.cooldown.disguise dummy "Disguise Cooldown"
+scoreboard objectives add skinwalker.claws_cooldown dummy "Claws Cooldown"
+scoreboard objectives add skinwalker.claws_cooldown_max dummy "Claws Max Cooldown"
+scoreboard objectives add skinwalker.infection_timer dummy "Infection Timer"
+
 
 # Create sidebar display
 scoreboard objectives add skinwalker.sidebar dummy "Skinwalker"
