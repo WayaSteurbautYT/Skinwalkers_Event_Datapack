@@ -15,7 +15,7 @@ execute as @a run {
 }
 
 # Count players and store in score
-scoreboard objectives add playerCount dummy
+# playerCount objective is now defined in setup_scoreboard.mcfunction
 scoreboard players set #playerCount playerCount 0
 execute as @a run scoreboard players add #playerCount playerCount 1
 

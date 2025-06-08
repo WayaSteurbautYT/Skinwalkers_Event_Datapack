@@ -39,3 +39,7 @@ playsound minecraft:entity.ender_dragon.growl master @a ~ ~ ~ 1 0.5
 
 # Update scoreboard
 function skinwalker:gui/update_scoreboard
+
+# Trigger Phase 2 narrative warnings
+function skinwalker:events/warnings/hes_back
+schedule function skinwalker:events/paranoia/breach_warning 5s

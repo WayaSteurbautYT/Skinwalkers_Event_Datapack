@@ -28,6 +28,7 @@ scoreboard objectives add skinwalker.cooldown.disguise dummy "Disguise Cooldown"
 scoreboard objectives add skinwalker.claws_cooldown dummy "Claws Cooldown"
 scoreboard objectives add skinwalker.claws_cooldown_max dummy "Claws Max Cooldown"
 scoreboard objectives add skinwalker.infection_timer dummy "Infection Timer"
+scoreboard objectives add playerCount dummy "Player Count" # Added for assign_roles
 
 
 # Create sidebar display

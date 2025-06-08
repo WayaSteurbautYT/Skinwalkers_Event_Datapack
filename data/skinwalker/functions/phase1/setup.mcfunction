@@ -30,3 +30,7 @@ function skinwalker:tasks/setup_tasks
 
 # Update scoreboard
 function skinwalker:gui/update_scoreboard
+
+# Set game phase to 1 and start phase 1 logic
+scoreboard players set #phase skinwalker.phase 1
+function skinwalker:phase1/start
