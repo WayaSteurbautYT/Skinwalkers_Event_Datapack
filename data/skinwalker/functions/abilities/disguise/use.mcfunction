@@ -6,15 +6,30 @@ scoreboard players set @s skinwalker.disguise_cooldown 1200
 # Set disguise duration timer (e.g., 30 seconds)
 scoreboard players set @s skinwalker.disguise_timer 600 # 30s * 20 ticks/s
 
-# Tag player as disguised (copy_identity should also add a specific disguised_as_PLAYERNAME tag)
+# Tag player as disguised
 tag @s add disguised
 
-# Find nearest player to disguise as and apply the disguise
-# Assuming skinwalker:abilities/disguise/copy_identity handles the actual appearance change
-# and sets a specific tag like "disguised_as_Notch" or similar for identification.
-execute as @p[limit=1,sort=nearest,distance=..10,team=!Skinwalker] at @s run function skinwalker:abilities/disguise/copy_identity
+# Find nearest valid player to disguise as and store their info
+data remove storage skinwalker:temp TargetToCopyUUID
+data remove storage skinwalker:temp TargetToCopyName
+# Make sure the target is not a spectator and is not the skinwalker themselves (though team check helps)
+execute as @p[limit=1,sort=nearest,distance=..10,team=!Skinwalker,tag=!spectator] run {
+    data modify storage skinwalker:temp TargetToCopyUUID set from entity @s UUID
+    data modify storage skinwalker:temp TargetToCopyName set from entity @s CustomName
+}
 
-# Visual effects for initiating disguise
+# If a target was found, proceed to copy identity. Otherwise, inform the Skinwalker.
+execute if data storage skinwalker:temp TargetToCopyUUID run function skinwalker:abilities/disguise/copy_identity
+execute unless data storage skinwalker:temp TargetToCopyUUID run {
+    tellraw @s {"text":"No valid disguise target found nearby. Disguise failed.","color":"red"}
+    # Untag 'disguised' and reset timer/cooldown as it failed.
+    tag @s remove disguised
+    scoreboard players set @s skinwalker.disguise_timer 0
+    scoreboard players set @s skinwalker.disguise_cooldown 0 # Or a shorter fail cooldown e.g. 100 ticks (5s)
+    return 0
+}
+
+# Visual effects for initiating disguise (assuming copy_identity will have its own success effects)
 playsound minecraft:entity.illusioner.prepare_mirror master @s ~ ~ ~ 1 1.2
 particle minecraft:effect ~ ~1 ~ 0.5 0.5 0.5 0.1 50
 

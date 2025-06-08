@@ -1,14 +1,14 @@
 # Handle phase shift ability
 
 # Check cooldown
-execute if score @s skinwalker.ability_cooldown matches 1.. run {
-    title @s actionbar ["",{"text":"Ability on cooldown: ","color":"red"},{"score":{"name":"@s","objective":"skinwalker.ability_cooldown"},"color":"white"}]
+execute if score @s skinwalker.cooldown.phase matches 1.. run {
+    title @s actionbar ["",{"text":"Phase Shift on cooldown: ","color":"red"},{"score":{"name":"@s","objective":"skinwalker.cooldown.phase"},"color":"white"}]
     playsound minecraft:block.note_block.bass player @s ~ ~ ~ 1 0.5
     return 0
 }
 
 # Set cooldown (30 seconds)
-scoreboard players set @s skinwalker.ability_cooldown 600
+scoreboard players set @s skinwalker.cooldown.phase 600
 
 # Set duration (5 seconds)
 scoreboard players set @s skinwalker.ability_duration 100
