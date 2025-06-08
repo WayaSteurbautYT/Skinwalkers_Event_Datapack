@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "travel_distance": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "position": {
+                "x": {
+                  "min": -30000000,
+                  "max": 30000000
+                },
+                "z": {
+                  "min": -30000000,
+                  "max": 30000000
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "function": "skinwalker:triggers/travel_distance"
+  }
+}

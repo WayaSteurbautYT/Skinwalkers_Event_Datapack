@@ -1,0 +1,19 @@
+{
+    "function": "minecraft:set_lore",
+    "entity": "this",
+    "lore": [
+        {
+            "text": "Cooldown: ",
+            "color": "dark_purple",
+            "italic": false
+        },
+        {
+            "score": {
+                "name": "#phase_cooldown",
+                "objective": "skinwalker.phase_cooldown"
+            },
+            "color": "dark_purple",
+            "italic": false
+        }
+    ]
+}

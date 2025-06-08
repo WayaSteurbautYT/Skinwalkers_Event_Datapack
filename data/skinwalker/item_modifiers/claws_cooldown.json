@@ -1,0 +1,19 @@
+{
+    "function": "minecraft:set_lore",
+    "entity": "this",
+    "lore": [
+        {
+            "text": "Cooldown: ",
+            "color": "red",
+            "italic": false
+        },
+        {
+            "score": {
+                "name": "#claws_cooldown",
+                "objective": "skinwalker.claws_cooldown"
+            },
+            "color": "red",
+            "italic": false
+        }
+    ]
+}

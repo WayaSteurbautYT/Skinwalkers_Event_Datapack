@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "craft_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:crafting_table"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "function": "skinwalker:triggers/craft_item"
+  }
+}

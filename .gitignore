@@ -1,0 +1,18 @@
+# Minecraft
+*.log
+*.log.*
+logs/
+crash-reports/
+# Editor directories and files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

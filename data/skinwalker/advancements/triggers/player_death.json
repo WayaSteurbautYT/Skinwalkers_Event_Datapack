@@ -1,0 +1,15 @@
+{
+  "criteria": {
+    "player_death": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "killed": true
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "skinwalker:triggers/player_death"
+  }
+}

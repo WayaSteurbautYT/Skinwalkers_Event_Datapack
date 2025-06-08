@@ -1,0 +1,19 @@
+{
+    "function": "minecraft:set_lore",
+    "entity": "this",
+    "lore": [
+        {
+            "text": "Cooldown: ",
+            "color": "dark_aqua",
+            "italic": false
+        },
+        {
+            "score": {
+                "name": "#disguise_cooldown",
+                "objective": "skinwalker.disguise_cooldown"
+            },
+            "color": "dark_aqua",
+            "italic": false
+        }
+    ]
+}

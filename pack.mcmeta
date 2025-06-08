@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "pack_format": 15,
+    "description": "§bSkinwalker Event v11.9.0§r\n§7A thrilling survival horror experience"
+  },
+  "functions": {
+    "tick": "skinwalker:tick",
+    "load": "skinwalker:load"
+  }
+}

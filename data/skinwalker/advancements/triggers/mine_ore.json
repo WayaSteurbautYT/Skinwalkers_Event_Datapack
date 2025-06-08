@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "mine_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:stone_ores"
+          },
+          {
+            "tag": "minecraft:deepslate_ores"
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "function": "skinwalker:triggers/mine_ore"
+  }
+}
