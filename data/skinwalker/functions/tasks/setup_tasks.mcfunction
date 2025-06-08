@@ -1,49 +1,51 @@
-# Initialize tasks for all players
+# Initialize tasks for all non-skinwalker players
 
-# Set total number of tasks based on player count
-scoreboard players set #total_tasks skinwalker.tasks_total 5
-execute if score #playerCount playerCount >= 5 run scoreboard players set #total_tasks skinwalker.tasks_total 7
-execute if score #playerCount playerCount >= 8 run scoreboard players set #total_tasks skinwalker.tasks_total 10
+# Set overall number of tasks to be completed for the game (influences phase transition)
+# This is a global target, not per player.
+# Example: 5 tasks total for the team to complete. This needs adjustment based on design.
+scoreboard players set #total_tasks_needed skinwalker.tasks_total 5
+execute if score #playerCount playerCount matches 2..3 run scoreboard players set #total_tasks_needed skinwalker.tasks_total 8
+execute if score #playerCount playerCount matches 4.. run scoreboard players set #total_tasks_needed skinwalker.tasks_total 10
 
-# Reset completed tasks counter
-scoreboard players set #tasks_completed skinwalker.tasks_completed 0
+# Reset global completed tasks counter (tracks total tasks completed by all players)
+scoreboard players set #tasks_completed_globally skinwalker.tasks_completed 0
 
-# Assign random tasks to each player
+# Assign tasks to each non-skinwalker player
 execute as @a[tag=!skinwalker] run {
-    # Clear previous tasks
-    scoreboard players set @s skinwalker.tasks_completed 0
+    # Initialize player's personal task count
+    scoreboard players set @s skinwalker.task_count 0
+    # Initialize player's completed task count (how many of their assigned tasks they've done)
+    scoreboard players set @s skinwalker.player_tasks_completed 0
     
-    # Give 1-3 tasks per player (more for smaller games, fewer for larger ones)
-    scoreboard players set #tasks_to_assign skinwalker.temp 3
-    execute if score #playerCount playerCount >= 5 run scoreboard players set #tasks_to_assign skinwalker.temp 2
-    execute if score #playerCount playerCount >= 8 run scoreboard players set #tasks_to_assign skinwalker.temp 1
+    # Determine number of tasks to assign to this player (e.g., 2-3)
+    scoreboard players set #tasks_to_assign_per_player skinwalker.temp 2
+    # Could add logic here for #playerCount to vary tasks_to_assign_per_player
+    # Example: if #playerCount playerCount matches 1 run scoreboard players set #tasks_to_assign_per_player skinwalker.temp 3 # Solo player gets more
+
+    # Loop to assign desired number of tasks to the player
+    # This requires assign_random_task to correctly handle not assigning duplicates
+    # and to stop if max personal tasks are reached, or no more unique tasks can be found.
+    # assign_random_task now has a loop with 10 attempts.
+    execute if score #tasks_to_assign_per_player skinwalker.temp matches 1.. run function skinwalker:tasks/assign_random_task
+    execute if score #tasks_to_assign_per_player skinwalker.temp matches 2.. run function skinwalker:tasks/assign_random_task
+    execute if score #tasks_to_assign_per_player skinwalker.temp matches 3.. run function skinwalker:tasks/assign_random_task
+    # Max 3 tasks per player with this setup.
     
-    # Assign random tasks
-    execute if score #tasks_to_assign skinwalker.temp matches 1 run function skinwalker:tasks/assign_random_task
-    execute if score #tasks_to_assign skinwalker.temp matches 2 run function skinwalker:tasks/assign_random_task
-    execute if score #tasks_to_assign skinwalker.temp matches 2 run function skinwalker:tasks/assign_random_task
-    execute if score #tasks_to_assign skinwalker.temp matches 3 run function skinwalker:tasks/assign_random_task
-    execute if score #tasks_to_assign skinwalker.temp matches 3 run function skinwalker:tasks/assign_random_task
-    execute if score #tasks_to_assign skinwalker.temp matches 3 run function skinwalker:tasks/assign_random_task
-    
-    # Notify player of their tasks
-    tellraw @s ["",{"text":"\n=== ","color":"gold"},{"text":"YOUR TASKS","color":"green","bold":true},{"text":" ===","color":"gold"}]
-    
-    # Display tasks in chat
-    execute if entity @s[tag=task_mine_diamond] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Mine ","color":"white"},{"text":"Diamond Ore","color":"aqua"}]
-    execute if entity @s[tag=task_craft_workbench] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Craft a ","color":"white"},{"text":"Crafting Table","color":"gold"}]
-    execute if entity @s[task_kill_mobs] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Kill ","color":"white"},{"score":{"name":"@s","objective":"skinwalker.task_kill_mobs"},"color":"red"},{"text":" Mobs","color":"white"}]
-    execute if entity @s[tag=task_eat_food] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Eat ","color":"white"},{"score":{"name":"@s","objective":"skinwalker.task_eat_food"},"color":"gold"},{"text":" Food Items","color":"white"}]
-    execute if entity @s[tag=task_breed_animals] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Breed ","color":"white"},{"score":{"name":"@s","objective":"skinwalker.task_breed_animals"},"color":"gold"},{"text":" Animals","color":"white"}]
-    execute if entity @s[tag=task_mine_stone] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Mine ","color":"white"},{"score":{"name":"@s","objective":"skinwalker.task_mine_stone"},"color":"gray"},{"text":" Stone","color":"white"}]
-    execute if entity @s[tag=task_craft_tools] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Craft ","color":"white"},{"score":{"name":"@s","objective":"skinwalker.task_craft_tools"},"color":"yellow"},{"text":" Tools","color":"white"}]
-    execute if entity @s[tag=task_smelt_iron] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Smelt ","color":"white"},{"score":{"name":"@s","objective":"skinwalker.task_smelt_iron"},"color":"white"},{"text":" Iron Ingots","color":"white"}]
-    execute if entity @s[tag=task_place_blocks] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Place ","color":"white"},{"score":{"name":"@s","objective":"skinwalker.task_place_blocks"},"color":"yellow"},{"text":" Blocks","color":"white"}]
-    execute if entity @s[tag=task_fish] run tellraw @s ["",{"text":"• ","color":"yellow"},{"text":"Catch ","color":"white"},{"score":{"name":"@s","objective":"skinwalker.task_fish"},"color":"aqua"},{"text":" Fish","color":"white"}]
-    
-    # Play task received sound
-    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1
+    # Notify player of their tasks (initial list)
+    # The individual assign_X_task functions are now expected to give detailed task info (books, popups).
+    # This is a general notification that task assignment is done for them.
+    tellraw @s ["",{"text":"\n=== ","color":"gold"},{"text":"YOUR TASKS HAVE BEEN ASSIGNED","color":"green","bold":true},{"text":" ===","color":"gold"}]
+    tellraw @s {"text":"Check your inventory for Task Books and look for pop-up messages.","color":"gray"}
 }
 
-# Update scoreboard with total tasks
-scoreboard players operation #tasks_completed skinwalker.tasks_completed = @a[tag=!skinwalker] skinwalker.tasks_completed
+# The old global #tasks_completed summation was flawed.
+# True global progress needs a different approach:
+# 1. Each player has a 'skinwalker.player_tasks_completed' score (0 or 1 if all their personal tasks are done).
+# 2. A function run by the game loop would sum these up:
+#    scoreboard players set #all_players_finished_personal_tasks skinwalker.temp 0
+#    execute as @a[tag=!skinwalker] if score @s skinwalker.player_tasks_completed matches 1 run scoreboard players add #all_players_finished_personal_tasks skinwalker.temp 1
+# This #all_players_finished_personal_tasks can then be compared to #number_of_non_skinwalkers.
+# OR, more simply, #tasks_completed_globally is incremented by 1 each time ANY player completes ANY of their tasks.
+# The current phase transition logic uses #completed_tasks (which I renamed #tasks_completed_globally for clarity) >= #total_tasks_needed.
+# This implies #tasks_completed_globally should be incremented when any single task is completed by any player.
+# This increment should happen in the function that marks a task as done for a player.

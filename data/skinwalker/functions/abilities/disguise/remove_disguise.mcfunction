@@ -43,11 +43,11 @@ title @s title ["",{"text":"DISGUISE REMOVED","color":"red","bold":true}]
 title @s subtitle ["",{"text":"Your true form is revealed!","color":"red"}]
 
 # Play reveal sound for the player
-playsound minecraft:entity.elder_guardian.curse player @s ~ ~ ~ 1 1
+playsound minecraft:entity.elder_guardian.curse master @s ~ ~ ~ 1 1
 
 # Alert nearby players (except skinwalkers)
 execute at @s run {
-    tellraw @a[distance=..20,team=!skinwalker] [
+    tellraw @a[distance=..20,team=!Skinwalker,tag=!skinwalker] [ # Ensure not to message other skinwalkers if team check fails
         "",
         {"text":"[","color":"dark_red"},
         {"text":"!","color":"red","bold":true},
@@ -58,19 +58,17 @@ execute at @s run {
     ]
     
     # Visual effects for nearby players
-    particle minecraft:flash ~ ~1 ~ 1 2 1 0.1 30
-    particle minecraft:dust 1 0 0 1 ~ ~1 ~ 0.5 1 0.5 0.1 20
+    particle minecraft:explosion ~ ~1 ~ 0.1 0.1 0.1 0.5 5
+    particle minecraft:flame ~ ~1 ~ 0.5 1 0.5 0.05 100
 }
 
-# Start cooldown (15 seconds)
-scoreboard players operation @s skinwalker.disguise_cooldown = @s skinwalker.disguise_cooldown_max
-
-# Notify about cooldown
-title @s title ["",{"text":"DISGUISE COOLDOWN","color":"gold"}]
-title @s subtitle ["",{"text":"You can disguise again in 15 seconds","color":"yellow"}]
+# Cooldown is handled by the 'use' function. No cooldown setting here.
+# scoreboard players operation @s skinwalker.disguise_cooldown = @s skinwalker.disguise_cooldown_max
+# title @s title ["",{"text":"DISGUISE COOLDOWN","color":"gold"}]
+# title @s subtitle ["",{"text":"You can disguise again in 15 seconds","color":"yellow"}]
 
 # Clear any temporary data
-data remove entity @s DisguiseTarget
+data remove entity @s DisguiseTarget # This seems like it should be DisguiseName or similar based on previous context
 data remove entity @s DisguiseName
 
 # Update action bar

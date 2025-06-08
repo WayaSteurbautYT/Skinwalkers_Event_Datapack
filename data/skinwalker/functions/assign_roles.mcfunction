@@ -23,7 +23,8 @@ execute as @a run scoreboard players add #playerCount playerCount 1
 scoreboard players get #playerCount playerCount
 
 # Handle role assignment based on player count
-execute if score #playerCount playerCount matches 1 run function skinwalker:roles/assign_solo
+execute if score #playerCount playerCount matches 1 run function skinwalker:roles/become_youtuber
+# For solo, they become a YouTuber. The become_youtuber function handles tags, team, and abilities.
 
 execute if score #playerCount playerCount matches 2 run {
     # 2 players: 1 Survivor, 1 Skinwalker

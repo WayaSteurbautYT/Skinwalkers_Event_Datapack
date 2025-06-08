@@ -9,6 +9,11 @@ bossbar set skinwalker:value 1
 
 # Play sound for all players
 playsound minecraft:entity.ender_dragon.growl master @a ~ ~ ~ 1 0.5
+playsound minecraft:block.portal.travel master @a ~ ~ ~ 0.7 1.5
+
+# Add arrival particles
+particle minecraft:reverse_portal ~ ~1 ~ 1 1 1 0.1 150 force @a
+particle minecraft:end_rod ~ ~1 ~ 0.5 0.5 0.5 0.05 100 force @a
 
 # Send title to all players
 title @a title ["",{"text":"PHASE 1","color":"blue","bold":true}]

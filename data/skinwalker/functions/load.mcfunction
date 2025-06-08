@@ -3,6 +3,9 @@
 # Setup all scoreboard objectives and teams
 function skinwalker:setup_scoreboard
 
+# Set default gamemode to Skinwalker (1)
+scoreboard players set #GAME_SETTINGS skinwalker.gamemode_selected 1
+
 # Initialize player tags
 tag @a remove survivor
 tag @a remove skinwalker
@@ -63,3 +66,7 @@ scoreboard objectives setdisplay sidebar skinwalker.role
 
 tellraw @a ["",{"text":"Skinwalker Game Mode ","color":"gold"},{"text":"loaded!","color":"yellow"}]
 tellraw @a ["",{"text":"Type ","color":"gray"},{"text":"/function skinwalker:start_event","color":"yellow"},{"text":" to begin","color":"gray"}]
+
+# Enable the player hub trigger for all players
+execute as @a run scoreboard players enable @s open_player_hub
+tellraw @a ["",{"text":"Tip: Use ","color":"gray"},{"text":"/trigger open_player_hub","color":"aqua"},{"text":" to view your role, tasks, and abilities!","color":"gray"}]

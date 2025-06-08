@@ -1,152 +1,97 @@
 # Function: skinwalker:tasks/check_task_completion
-# Purpose: Check and update completion status for a player's assigned tasks
-# Called for each survivor during the task check phase
+# Purpose: Checks all assigned tasks for the executing player (@s) and updates their completion status.
 
-# Check if player has already completed all tasks (3 is the max)
-execute if score @s skinwalker.tasks matches 3.. run return 0
-
-# Store current task count for comparison
-scoreboard players operation #previous_tasks skinwalker.temp = @s skinwalker.tasks
-
-# Check each task type and update completion status
-# Only check tasks that are assigned to this player
-
-# Task 1: Mine ores
-execute if score @s skinwalker.assigned_task1 matches 1 if score @s skinwalker.task_mine_ores matches 0 run {
-    execute if score @s skinwalker.mined_ores matches 10.. run {
-        scoreboard players set @s skinwalker.task_mine_ores 1
-        scoreboard players add @s skinwalker.tasks 1
-        
-        # Notify player
-        title @s title ["",{"text":"Task Completed!","color":"green"}]
-        title @s subtitle ["",{"text":"Mine 10 ores","color":"yellow"}]
-        tellraw @s ["",{"text":"[TASK] ","color":"green"},{"text":"Completed: ","color":"white"},{"text":"Mine 10 ores","color":"yellow"}]
-        playsound minecraft:entity.player.levelup player @s ~ ~ ~ 1 1
-        
-        # Update task list display
-        function skinwalker:tasks/update_task_list
-    }
+# --- Task: Mine Diamond Ore ---
+execute if entity @s[tag=task_mine_diamond] if score @s skinwalker.task_mine_diamond >= @s skinwalker.task_mine_diamond_required run {
+    tag @s remove task_mine_diamond
+    # Store task name for messaging, example (not fully implemented parameter passing)
+    data modify storage skinwalker:temp current_task_name set value "Mine Diamond Ore"
+    function skinwalker:tasks/complete_single_task_actions
 }
 
-# Task 2: Craft items
-execute if score @s skinwalker.assigned_task2 matches 1 if score @s skinwalker.task_craft_items matches 0 run {
-    execute if score @s skinwalker.crafted_items matches 5.. run {
-        scoreboard players set @s skinwalker.task_craft_items 1
-        scoreboard players add @s skinwalker.tasks 1
-        
-        # Notify player
-        title @s title ["",{"text":"Task Completed!","color":"green"}]
-        title @s subtitle ["",{"text":"Craft 5 items","color":"yellow"}]
-        tellraw @s ["",{"text":"[TASK] ","color":"green"},{"text":"Completed: ","color":"white"},{"text":"Craft 5 items","color":"yellow"}]
-        playsound minecraft:entity.player.levelup player @s ~ ~ ~ 1 1
-        
-        # Update task list display
-        function skinwalker:tasks/update_task_list
-    }
+# --- Task: Craft Workbench ---
+# This task is tag-only. Assumes an external trigger (advancement) calls a function that sets a temporary score/tag,
+# or directly calls complete_single_task_actions after removing the main task tag.
+# For this check, if the tag is present, we assume it's ready to be marked complete IF a separate trigger confirms it.
+# This is simplified: a real system would have the advancement trigger remove task_craft_workbench and call complete_single_task_actions.
+execute if entity @s[tag=task_craft_workbench] run {
+    # Example: Advancement for crafting workbench would run:
+    # tag @s[advancements={minecraft:story/smelt_iron=true}] remove task_craft_workbench # Incorrect advancement for example
+    # data modify storage skinwalker:temp current_task_name set value "Craft Workbench"
+    # function skinwalker:tasks/complete_single_task_actions
+    # For now, this check_task_completion won't auto-complete it without a trigger.
 }
 
-# Task 3: Kill mobs
-execute if score @s skinwalker.assigned_task3 matches 1 if score @s skinwalker.task_kill_mobs matches 0 run {
-    execute if score @s skinwalker.killed_mobs matches 10.. run {
-        scoreboard players set @s skinwalker.task_kill_mobs 1
-        scoreboard players add @s skinwalker.tasks 1
-        
-        # Notify player
-        title @s title ["",{"text":"Task Completed!","color":"green"}]
-        title @s subtitle ["",{"text":"Kill 10 mobs","color":"yellow"}]
-        tellraw @s ["",{"text":"[TASK] ","color":"green"},{"text":"Completed: ","color":"white"},{"text":"Kill 10 mobs","color":"yellow"}]
-        playsound minecraft:entity.player.levelup player @s ~ ~ ~ 1 1
-        
-        # Update task list display
-        function skinwalker:tasks/update_task_list
-    }
+# --- Task: Kill Mobs ---
+execute if entity @s[tag=task_kill_mobs] if score @s skinwalker.task_kill_mobs >= @s skinwalker.task_kill_mobs_required run {
+    tag @s remove task_kill_mobs
+    data modify storage skinwalker:temp current_task_name set value "Kill Mobs"
+    function skinwalker:tasks/complete_single_task_actions
 }
 
-# Task 4: Travel distance
-execute if score @s skinwalker.assigned_task4 matches 1 if score @s skinwalker.task_travel_distance matches 0 run {
-    execute if score @s skinwalker.traveled_blocks matches 1000.. run {
-        scoreboard players set @s skinwalker.task_travel_distance 1
-        scoreboard players add @s skinwalker.tasks 1
-        
-        # Notify player
-        title @s title ["",{"text":"Task Completed!","color":"green"}]
-        title @s subtitle ["",{"text":"Travel 1000 blocks","color":"yellow"}]
-        tellraw @s ["",{"text":"[TASK] ","color":"green"},{"text":"Completed: ","color":"white"},{"text":"Travel 1000 blocks","color":"yellow"}]
-        playsound minecraft:entity.player.levelup player @s ~ ~ ~ 1 1
-        
-        # Update task list display
-        function skinwalker:tasks/update_task_list
-    }
+# --- Task: Eat Food ---
+execute if entity @s[tag=task_eat_food] if score @s skinwalker.task_eat_food >= @s skinwalker.task_eat_food_required run {
+    tag @s remove task_eat_food
+    data modify storage skinwalker:temp current_task_name set value "Eat Food"
+    function skinwalker:tasks/complete_single_task_actions
 }
 
-# Task 5: Build structure
-execute if score @s skinwalker.assigned_task5 matches 1 if score @s skinwalker.task_build_structure matches 0 run {
-    execute if score @s skinwalker.built_blocks matches 100.. run {
-        scoreboard players set @s skinwalker.task_build_structure 1
-        scoreboard players add @s skinwalker.tasks 1
-        
-        # Notify player
-        title @s title ["",{"text":"Task Completed!","color":"green"}]
-        title @s subtitle ["",{"text":"Build a structure (100+ blocks)","color":"yellow"}]
-        tellraw @s ["",{"text":"[TASK] ","color":"green"},{"text":"Completed: ","color":"white"},{"text":"Build a structure (100+ blocks)","color":"yellow"}]
-        playsound minecraft:entity.player.levelup player @s ~ ~ ~ 1 1
-        
-        # Update task list display
-        function skinwalker:tasks/update_task_list
-    }
+# --- Task: Breed Animals ---
+execute if entity @s[tag=task_breed_animals] if score @s skinwalker.task_breed_animals >= @s skinwalker.task_breed_animals_required run {
+    tag @s remove task_breed_animals
+    data modify storage skinwalker:temp current_task_name set value "Breed Animals"
+    function skinwalker:tasks/complete_single_task_actions
 }
 
-# If tasks were completed, update the player's task list
-execute unless score @s skinwalker.tasks = #previous_tasks skinwalker.temp run {
-    # Additional effects when tasks are completed
-    execute at @s run particle minecraft:glow ~ ~1 ~ 0.5 0.5 0.5 0.1 10 force @a
+# --- Task: Mine Stone ---
+execute if entity @s[tag=task_mine_stone] if score @s skinwalker.task_mine_stone >= @s skinwalker.task_mine_stone_required run {
+    tag @s remove task_mine_stone
+    data modify storage skinwalker:temp current_task_name set value "Mine Stone"
+    function skinwalker:tasks/complete_single_task_actions
+}
+
+# --- Task: Craft Tools ---
+execute if entity @s[tag=task_craft_tools] if score @s skinwalker.task_craft_tools >= @s skinwalker.task_craft_tools_required run {
+    tag @s remove task_craft_tools
+    data modify storage skinwalker:temp current_task_name set value "Craft Tools"
+    function skinwalker:tasks/complete_single_task_actions
+}
+
+# --- Task: Smelt Iron ---
+execute if entity @s[tag=task_smelt_iron] if score @s skinwalker.task_smelt_iron >= @s skinwalker.task_smelt_iron_required run {
+    tag @s remove task_smelt_iron
+    data modify storage skinwalker:temp current_task_name set value "Smelt Iron Ingots"
+    function skinwalker:tasks/complete_single_task_actions
+}
+
+# --- Task: Place Blocks ---
+execute if entity @s[tag=task_place_blocks] if score @s skinwalker.task_place_blocks >= @s skinwalker.task_place_blocks_required run {
+    tag @s remove task_place_blocks
+    data modify storage skinwalker:temp current_task_name set value "Place Blocks"
+    function skinwalker:tasks/complete_single_task_actions
+}
+
+# --- Task: Fish ---
+execute if entity @s[tag=task_fish] if score @s skinwalker.task_fish >= @s skinwalker.task_fish_required run {
+    tag @s remove task_fish
+    data modify storage skinwalker:temp current_task_name set value "Catch Fish"
+    function skinwalker:tasks/complete_single_task_actions
+}
+
+# After checking all individual tasks, see if the player has completed all their assigned tasks
+execute if score @s skinwalker.task_count matches 0 if score @s skinwalker.player_all_tasks_done matches 0 run {
+    scoreboard players set @s skinwalker.player_all_tasks_done 1
     
-    # If all tasks are now complete, handle that
-    execute if score @s skinwalker.tasks matches 3 run {
-        # Grant rewards or special effects
-        effect give @s minecraft:hero_of_the_village 30 1 true
-        tellraw @s ["",{"text":"[TASK] ","color":"green"},{"text":"All tasks completed! ","color":"yellow"},{"text":"Wait for others to finish.","color":"gray"}]
-    }
+    tellraw @s ["",{"text":"[TASK MASTER] ","color":"gold"},{"text":"You have completed all of your assigned tasks! Great job!","color":"yellow"}]
+    tellraw @a [{"selector":"@s","color":"aqua"},{"text":" has completed all their tasks!","color":"green"}]
+    playsound minecraft:ui.toast.challenge_complete player @s ~ ~ ~ 1 1.2
+    playsound minecraft:entity.player.levelup player @a ~ ~ ~ 0.7 0.8
+    
+    effect give @s minecraft:hero_of_the_village 60 0 true
+    give @s minecraft:emerald 3
 }
 
-# Check if player just completed all tasks
-scoreboard players operation #new_tasks skinwalker.temp = @s skinwalker.tasks
-scoreboard players operation #new_tasks skinwalker.temp -= #previous_tasks skinwalker.temp
-
-execute if score #new_tasks skinwalker.temp matches 1.. run {
-    # Player completed at least one task this check
-    
-    # Check if they just finished all tasks
-    execute if score @s skinwalker.tasks matches 3 run {
-        tellraw @a ["",{"text":"[TASK] ","color":"green"},{"selector":"@s"},{"text":" has completed all their tasks!","color":"green"}]
-        
-        # Give reward
-        give @s minecraft:emerald 3
-        effect give @s minecraft:speed 300 0 true
-        playsound minecraft:entity.player.levelup player @a ~ ~ ~ 1 0.8
-    }
-    
-    # Update task tracker
-    function skinwalker:tasks/update_task_list
-}
-
-# Task 3: Kill mobs
-#execute if score @s skinwalker.task_kill_mobs matches 0 if score @s skinwalker.killed_mobs matches 5.. run {
-#    scoreboard players set @s skinwalker.task_kill_mobs 1
-#    scoreboard players add @s skinwalker.tasks 1
-#    tellraw @s ["",{"text":"Task Completed: ","color":"green"},{"text":"Kill 5 mobs","color":"white"}]
-#}
-
-# Task 4: Travel distance
-#execute if score @s skinwalker.task_travel_distance matches 0 if score @s skinwalker.distance_traveled matches 1000.. run {
-#    scoreboard players set @s skinwalker.task_travel_distance 1
-#    scoreboard players add @s skinwalker.tasks 1
-#    tellraw @s ["",{"text":"Task Completed: ","color":"green"},{"text":"Travel 1000 blocks","color":"white"}]
-#}
-
-# Task 5: Build structure
-#execute if score @s skinwalker.task_build_structure matches 0 if score @s skinwalker.built_blocks matches 64.. run {
-#    scoreboard players set @s skinwalker.task_build_structure 1
-#    scoreboard players add @s skinwalker.tasks 1
-#    tellraw @s ["",{"text":"Task Completed: ","color":"green"},{"text":"Build a structure (64+ blocks)","color":"white"}]
-#}
+# Update task list display for the player
+function skinwalker:tasks/update_task_list
+function skinwalker:gui/update_sidebar
+# function skinwalker:gui/update_actionbar

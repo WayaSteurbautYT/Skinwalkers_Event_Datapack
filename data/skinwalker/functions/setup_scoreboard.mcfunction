@@ -18,6 +18,8 @@ scoreboard objectives add skinwalker.cooldown dummy "Cooldown"
 scoreboard objectives add skinwalker.ability_cooldown dummy "Ability Cooldown"
 scoreboard objectives add skinwalker.ability_duration dummy "Ability Duration"
 scoreboard objectives add skinwalker.temp dummy "Temp"
+scoreboard objectives add skinwalker.gamemode_selected dummy "Selected Gamemode"
+scoreboard objectives add open_player_hub trigger "Open Player Hub" # New GUI Trigger
 
 # Create sidebar display
 scoreboard objectives add skinwalker.sidebar dummy "Skinwalker"
@@ -29,6 +31,7 @@ scoreboard objectives modify skinwalker.tasks displayname "Tasks"
 scoreboard objectives modify skinwalker.cooldown displayname "Cooldown"
 scoreboard objectives modify skinwalker.ability_cooldown displayname "Ability CD"
 scoreboard objectives modify skinwalker.ability_duration displayname "Ability"
+scoreboard objectives modify skinwalker.gamemode_selected displayname "Gamemode" # New objective display name
 scoreboard objectives modify skinwalker.sidebar displayname "§6§lSkinwalker"
 
 # Initialize global variables

@@ -13,6 +13,13 @@ time set 1000
 
 # Play dramatic sound
 playsound minecraft:entity.ender_dragon.growl master @a ~ ~ ~ 1 1.0
+playsound minecraft:event.raid.horn master @a ~ ~15 ~ 1.5 0.7
+playsound minecraft:event.raid.horn master @a ~ ~15 ~ 1.5 0.8
+playsound minecraft:music_disc.ward master @a ~ ~ ~ 2.0 1.0 # Play some intense music if available via resource pack or default
+
+# Add particles for dramatic showdown feel
+particle minecraft:warped_spore ~ ~2 ~ 10 5 10 0.5 500 force @a
+particle minecraft:totem_of_undying ~ ~1 ~ 1 1 1 0.1 100 force @a
 
 # Message to all players
 tellraw @a ["",{"text":"=== ","color":"dark_red"},{"text":"THE FINAL SHOWDOWN","color":"red","bold":true},{"text":" ===\n","color":"dark_red"},{"text":"The Skinwalker has been cornered! Work together to defeat it!","color":"gray"}]
