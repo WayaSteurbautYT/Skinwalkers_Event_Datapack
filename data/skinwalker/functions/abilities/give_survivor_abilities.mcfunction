@@ -11,8 +11,12 @@ give @s minecraft:lantern{display:{Name:'{"text":"Flashlight","color":"yellow","
 # Give First Aid (Golden Apple)
 give @s minecraft:golden_apple{display:{Name:'{"text":"First Aid Kit","color":"red","italic":false}',Lore:['{"text":"Heals you when right-clicked","color":"gray"}','{"text":"Cooldown: 60s","color":"dark_gray"}']},Enchantments:[{}],HideFlags:1} 1
 
+# Give Adrenaline Shot (Potion)
+give @s minecraft:potion{CustomModelData:3001,display:{Name:'{"text":"Adrenaline Shot","color":"aqua","italic":false}',Lore:['{"text":"Grants a quick burst of speed and regeneration.","color":"gray"}','{"text":"Single use. Be wise.","color":"dark_gray"}]}} 1
+
 # Set cooldowns
 scoreboard players set @s skinwalker.cooldown.firstaid 0
+scoreboard players set @s skinwalker.adrenaline_cooldown 0 # Initialize cooldown for new item
 
 # Message about abilities
 title @s title ["",{"text":"SURVIVOR ITEMS","color":"green","bold":true}]

@@ -8,11 +8,11 @@ execute store result score #skinwalkers_alive skinwalker.temp run tag @a[tag=ski
 # Track YouTuber tasks every second
 execute if score #tick skinwalker.temp matches ..0 run function skinwalker:game/track_tasks
 
-# Update game phase and handle phase-specific logic
-execute if score #game_phase skinwalker.phase matches 1 run function skinwalker:phase1_loop
-execute if score #game_phase skinwalker.phase matches 2 run function skinwalker:phase2_loop
+# Update current game phase logic (runs phaseX/update)
+function skinwalker:phase/update_phase
 
 # Update bossbar with player counts and phase info
+# Ensure #phase is the correct score to display for the current phase.
 bossbar set skinwalker:players name ["",
     {"text":"Survivors: ","color":"green"},
     {"score":{"name":"#survivors_alive","objective":"skinwalker.temp"},"color":"white"},
@@ -20,7 +20,7 @@ bossbar set skinwalker:players name ["",
     {"text":"Skinwalkers: ","color":"red"},
     {"score":{"name":"#skinwalkers_alive","objective":"skinwalker.temp"},"color":"white"},
     {"text":" | Phase: ","color":"gray"},
-    {"score":{"name":"#game_phase","objective":"skinwalker.phase"},"color":"yellow"}
+    {"score":{"name":"#phase","objective":"skinwalker.phase"},"color":"yellow"}
 ]
 
 # Check phase transitions and win conditions every second
@@ -33,6 +33,7 @@ execute if score #tick skinwalker.temp matches ..0 run {
 }
 
 # Update player GUIs (every 5 ticks for performance)
+# Consider changing the trigger from #tick..0 to a less frequent but regular interval if needed.
 execute if score #tick skinwalker.temp matches ..0 run function skinwalker:gui/update_actionbar
 
 # Handle disguise timers (every second)
@@ -50,6 +51,9 @@ execute as @a run {
     
     # Decrement disguise cooldown
     execute if score @s skinwalker.disguise_cooldown matches 1.. run scoreboard players remove @s skinwalker.disguise_cooldown 1
+
+    # Decrement Emergency Beacon cooldown
+    execute if score @s skinwalker.beacon_cooldown matches 1.. run scoreboard players remove @s skinwalker.beacon_cooldown 1
 }
 
 # Handle YouTuber task tracking (every 5 seconds)

@@ -11,12 +11,14 @@ execute if score #task_check_timer skinwalker.temp >= #task_check_delay skinwalk
     execute store result score #total_tasks_needed skinwalker.temp run scoreboard players get #total_tasks skinwalker.tasks_total
     
     # If all tasks are completed, advance to next phase
+    # Assuming #completed_tasks and #total_tasks_needed are correctly updated by the task system.
+    # The task system needs to ensure #completed_tasks reflects the total number of *all* required tasks.
     execute if score #completed_tasks skinwalker.temp >= #total_tasks_needed skinwalker.temp run {
         tellraw @a ["",{"text":"=== ","color":"gold"},{"text":"ALL TASKS COMPLETED!","color":"green","bold":true},{"text":" ===","color":"gold"}]
-        tellraw @a ["",{"text":"• ","color":"green"},{"text":"Survivors have completed all their tasks!","color":"white"}]
+        tellraw @a ["",{"text":"• ","color":"green"},{"text":"All tasks have been completed! Advancing to the next phase...","color":"white"}]
         
-        # Start phase transition
-        function skinwalker:phase2/start
+        # Advance to the next phase using the central phase advancement function
+        function skinwalker:phase/advance_phase
     }
 }
 

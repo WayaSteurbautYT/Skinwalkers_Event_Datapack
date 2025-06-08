@@ -34,4 +34,9 @@ execute at @s run effect give @a[distance=..30] minecraft:glowing 10 0 true
 execute at @s run function skinwalker:items/reveal_skinwalkers
 
 # Remove one beacon from inventory
-give @s minecraft:totem_of_undying{display:{Name:'{"text":"Emergency Beacon","color":"yellow","italic":false}',Lore:['{"text":"Reveals nearby Skinwalkers","color":"gray","italic":false}','{"text":"for 10 seconds (2m cooldown)","color":"dark_gray","italic":false}']},CustomModelData:2001} 0
+# Using 'clear' is generally more reliable for removing a specific count.
+# Assuming the beacon is a totem_of_undying with specific NBT (like CustomModelData:2001).
+# For simplicity, if it's just one type of beacon item the player has:
+clear @s minecraft:totem_of_undying 1
+# If more specific NBT matching is needed and CustomModelData is consistently applied:
+# clear @s minecraft:totem_of_undying{CustomModelData:2001} 1

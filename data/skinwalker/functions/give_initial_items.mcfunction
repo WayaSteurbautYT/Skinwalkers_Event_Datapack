@@ -1,9 +1,6 @@
 # Give initial items to all players based on their role
 # This is called after roles are assigned
-
-execute as @a[tag=skinwalker] run function skinwalker:abilities/give_skinwalker_abilities
-execute as @a[tag=youtuber] run function skinwalker:abilities/give_youtuber_abilities
-execute as @a[tag=survivor] run function skinwalker:abilities/give_survivor_abilities
+# Role-specific abilities and items are now handled by their respective `become_role` functions.
 
 # Give everyone some food
 clear @s minecraft:bread 0 1

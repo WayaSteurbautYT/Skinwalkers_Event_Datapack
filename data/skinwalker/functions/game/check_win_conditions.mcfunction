@@ -91,10 +91,20 @@ execute unless score #survivors_alive skinwalker.temp matches 1.. unless score #
 }
 
 # Check for YouTuber special win condition (all tasks completed)
-execute as @a[tag=youtuber] if score @s skinwalker.tasks_completed matches 5 run {
-    # YouTuber wins by completing all tasks
-    title @a[tag=youtuber] title ["",{"text":"MISSION COMPLETE!","color":"gold","bold":true}]
-    title @a[tag=youtuber] subtitle ["",{"text":"You've escaped with the evidence!","color":"yellow"}]
+# This applies if a YouTuber is in game AND the global task target is met.
+# Particularly relevant for Solo mode, but could be a general win condition if YouTubers are primary taskers.
+execute if score #youtubers_alive skinwalker.temp matches 1.. if score #tasks_completed_globally skinwalker.tasks_completed >= #total_tasks_needed skinwalker.tasks_total run {
+    # YouTuber wins by completing all tasks (or being present when they are completed)
+    # Ensure this doesn't prematurely end game if other win conditions (like survivor victory by elimination) are preferred.
+    # This specific condition is good for a solo YouTuber.
+    # For team games, might need to ensure other conditions (like survivors also alive) or make this a specific YouTuber escape.
+
+    # For now, this will trigger a YouTuber win if they are present and tasks are done.
+    # If it's solo mode (#playerCount == 1), this is the primary win condition.
+    execute as @a[tag=youtuber] run {
+        title @s title ["",{"text":"MISSION COMPLETE!","color":"gold","bold":true}]
+        title @s subtitle ["",{"text":"You've completed all tasks!","color":"yellow"}]
+    }
     
     title @a[tag=!youtuber] title ["",{"text":"YOUTUBER ESCAPED!","color":"blue","bold":true}]
     title @a[tag=!youtuber] subtitle ["",{"text":"The truth will be revealed...","color":"dark_blue"}]
