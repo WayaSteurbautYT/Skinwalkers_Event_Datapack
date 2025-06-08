@@ -45,7 +45,7 @@ effect give @s minecraft:invisibility 2 0 true
 effect give @s minecraft:resistance 2 0 true
 
 # Cooldown feedback
-title @s actionbar ["",{"text":"Phase Shift used! ","color":"dark_purple"},{"text":"Cooldown: ","color":"gray"},{"text":"10s","color":"light_purple"}]
+title @s actionbar ["",{"text":"Phase Shift used! ","color":"dark_purple"},{"text":"Cooldown: ","color":"gray"},{"text":"15s","color":"light_purple"}]
 
 # Play enderman scream if near players
 execute as @a[distance=0.1..10] at @s run {

@@ -1,4 +1,6 @@
 # Emergency Beacon - Reveal nearby Skinwalkers
+# This function is triggered when a player uses/right-clicks the Emergency Beacon item.
+# It reveals nearby Skinwalkers to the user and their teammates.
 
 # Check cooldown
 execute if score @s skinwalker.beacon_cooldown matches 1.. run {
@@ -27,16 +29,14 @@ title @s subtitle ["",{"text":"Revealing nearby Skinwalkers...","color":"white"}
 # Notify nearby players
 execute at @s run tellraw @a[distance=..30] ["",{"text":"[","color":"dark_gray"},{"text":"!","color":"yellow","bold":true},{"text":"] ","color":"dark_gray"},{"selector":"@s","color":"yellow"},{"text":" activated an ","color":"white"},{"text":"Emergency Beacon","color":"yellow"},{"text":"!","color":"white"}]
 
-# Flash effect for nearby players
+# Flash effect for all nearby players (visual cue that beacon fired)
 execute at @s run effect give @a[distance=..30] minecraft:glowing 10 0 true
 
-# Reveal Skinwalkers in 20 block radius
+# Reveal Skinwalkers in 20 block radius (actual reveal logic is in this function)
+# This should apply glowing effect specifically to players identified as Skinwalkers.
 execute at @s run function skinwalker:items/reveal_skinwalkers
 
 # Remove one beacon from inventory
-# Using 'clear' is generally more reliable for removing a specific count.
-# Assuming the beacon is a totem_of_undying with specific NBT (like CustomModelData:2001).
-# For simplicity, if it's just one type of beacon item the player has:
-clear @s minecraft:totem_of_undying 1
-# If more specific NBT matching is needed and CustomModelData is consistently applied:
-# clear @s minecraft:totem_of_undying{CustomModelData:2001} 1
+# Assuming the beacon is a totem_of_undying with CustomModelData:2001.
+# This makes the item consumption specific.
+clear @s minecraft:totem_of_undying{CustomModelData:2001} 1

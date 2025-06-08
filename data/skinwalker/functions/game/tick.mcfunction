@@ -51,8 +51,8 @@ execute as @a run {
     # Decrement claws cooldown
     execute if score @s skinwalker.claws_cooldown matches 1.. run scoreboard players remove @s skinwalker.claws_cooldown 1
     
-    # Decrement phase shift cooldown
-    execute if score @s skinwalker.cooldown.phase matches 1.. run scoreboard players remove @s skinwalker.cooldown.phase 1
+    # Decrement phase shift cooldown (objective name standardized to skinwalker.phase_cooldown)
+    execute if score @s skinwalker.phase_cooldown matches 1.. run scoreboard players remove @s skinwalker.phase_cooldown 1
     
     # Decrement disguise cooldown
     execute if score @s skinwalker.disguise_cooldown matches 1.. run scoreboard players remove @s skinwalker.disguise_cooldown 1
@@ -71,14 +71,14 @@ execute as @a[tag=recently_infected] run {
         # First, call the full conversion function
         function skinwalker:convert_to_skinwalker
 
-        # Original effects/messages can remain or be adjusted if convert_to_skinwalker handles them
-        tag @s remove recently_infected # convert_to_skinwalker should ideally handle this if it's a general "become skinwalker" script
+        # Remove the 'recently_infected' tag. convert_to_skinwalker does not handle this.
+        tag @s remove recently_infected
 
-        title @s title ["",{"text":"INFECTION COMPLETE","color":"dark_red","bold":true}]
-        # This title might be redundant if convert_to_skinwalker has its own.
-        # title @s subtitle ["",{"text":"You are now a full Skinwalker!","color":"red"}] # Also potentially redundant
+        # The title "INFECTION COMPLETE" is redundant as convert_to_skinwalker provides its own comprehensive titles.
+        # title @s title ["",{"text":"INFECTION COMPLETE","color":"dark_red","bold":true}]
 
-        # These effects might be specific to "infection completion" bonus vs standard skinwalker setup
+        # These effects are specific to completing the infection timer, acting as a small bonus for the new Skinwalker.
+        # convert_to_skinwalker does not grant these specific timed boosts.
         effect give @s minecraft:strength 10 0 true
         effect give @s minecraft:speed 10 0 true
     }

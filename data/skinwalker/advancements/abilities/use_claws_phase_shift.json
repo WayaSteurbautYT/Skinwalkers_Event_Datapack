@@ -1,0 +1,18 @@
+{
+    "criteria": {
+        "use_claws_for_phase_shift": {
+            "trigger": "minecraft:used_item",
+            "conditions": {
+                "item": {
+                    "items": [
+                        "minecraft:stick"
+                    ],
+                    "nbt": "{CustomModelData:1001}"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "skinwalker:abilities/phase_shift/try_use"
+    }
+}

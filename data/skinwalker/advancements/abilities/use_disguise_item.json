@@ -1,0 +1,18 @@
+{
+    "criteria": {
+        "use_item": {
+            "trigger": "minecraft:used_item",
+            "conditions": {
+                "item": {
+                    "items": [
+                        "minecraft:player_head"
+                    ],
+                    "nbt": "{CustomModelData:1003}"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "skinwalker:abilities/disguise/start_selection"
+    }
+}

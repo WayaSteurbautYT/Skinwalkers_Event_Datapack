@@ -7,10 +7,10 @@ scoreboard players set @s skinwalker.claws_cooldown 0
 scoreboard players set @s skinwalker.phase_cooldown 0
 scoreboard players set @s skinwalker.disguise_cooldown 0
 
-# Set cooldown times (in ticks, 20 ticks = 1 second)
-scoreboard players set @s skinwalker.claws_cooldown_max 100  # 5 seconds
-scoreboard players set @s skinwalker.phase_cooldown_max 200    # 10 seconds
-scoreboard players set @s skinwalker.disguise_cooldown_max 300 # 15 seconds
+# Set cooldown times (in ticks, 20 ticks = 1 second) - Updated per guide
+scoreboard players set @s skinwalker.claws_cooldown_max 20     # 1 second
+scoreboard players set @s skinwalker.phase_cooldown_max 300   # 15 seconds
+scoreboard players set @s skinwalker.disguise_cooldown_max 600 # 30 seconds
 
 title @s title ["",{"text":"YOU ARE THE SKINWALKER","color":"dark_red","bold":true}]
 title @s subtitle ["",{"text":"Blend in and eliminate the survivors","color":"red"}]
@@ -22,10 +22,10 @@ tellraw @s ["",{"text":"[OBJECTIVE]","color":"red"},{"text":" Eliminate all surv
 tellraw @s ["",{"text":"[ABILITIES]","color":"red"},{"text":" Right-click with an ability item to use it"}]
 tellraw @s ["",{"text":"[TIPS]","color":"gold"},{"text":" Use your abilities strategically and don't reveal your identity too soon!"}]
 
-# Give abilities with proper NBT data
-give @s minecraft:stick{display:{Name:'{"text":"Skinwalker Claws","color":"dark_red","italic":false}',Lore:['{"text":"Right-click to slash at nearby survivors","color":"gray"}','{"text":"Cooldown: 5s","color":"gray"}']},CustomModelData:1001,Enchantments:[{id:"minecraft:sharpness",lvl:1s}],HideFlags:1} 1
-give @s minecraft:feather{display:{Name:'{"text":"Phase Shift","color":"dark_purple","italic":false}',Lore:['{"text":"Right-click to teleport forward","color":"gray"}','{"text":"Cooldown: 10s","color":"gray"}']},CustomModelData:1002,HideFlags:1} 1
-give @s minecraft:player_head{display:{Name:'{"text":"Disguise","color":"dark_aqua","italic":false}',Lore:['{"text":"Right-click to copy a survivor's appearance","color":"gray"}','{"text":"Cooldown: 15s","color":"gray"}']},SkullOwner:"MHF_Question",CustomModelData:1003,HideFlags:1} 1
+# Give abilities with proper NBT data - Updated item lore and removed feather
+give @s minecraft:stick{display:{Name:'{"text":"Skinwalker Claws","color":"dark_red","italic":false}',Lore:['{"text":"Left-Click: Attack (1s Cooldown)","color":"gray"}','{"text":"Right-Click: Phase Shift (15s Cooldown)","color":"gray"}']},CustomModelData:1001,Enchantments:[{id:"minecraft:sharpness",lvl:1s}],HideFlags:1} 1
+# Removed Phase Shift Feather: give @s minecraft:feather{display:{Name:'{"text":"Phase Shift","color":"dark_purple","italic":false}',Lore:['{"text":"Right-click to teleport forward","color":"gray"}','{"text":"Cooldown: 10s","color":"gray"}']},CustomModelData:1002,HideFlags:1} 1
+give @s minecraft:player_head{display:{Name:'{"text":"Disguise","color":"dark_aqua","italic":false}',Lore:['{"text":"Right-click to copy a survivor's appearance","color":"gray"}','{"text":"Cooldown: 30s (after removal)","color":"gray"}']},SkullOwner:"MHF_Question",CustomModelData:1003,HideFlags:1} 1
 
 # Make skinwalkers glow to admins
 data merge entity @s {Glowing:1b}

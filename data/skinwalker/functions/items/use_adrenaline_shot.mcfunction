@@ -6,16 +6,17 @@
 execute unless entity @s[tag=survivor,tag=youtuber] run {
     # Optional: message if non-survivor tries to use it, though they shouldn't have it.
     tellraw @s {"text":"This item is for Survivors.","color":"red"}
-    # Return item if it was taken by a non-survivor somehow
-    give @s minecraft:potion{CustomModelData:3001,display:{Name:'{"text":"Adrenaline Shot","color":"aqua","italic":false}',Lore:['{"text":"Grants a quick burst of speed and regeneration.","color":"gray"}','{"text":"Single use. Be wise.","color":"dark_gray"}]}} 1
+    # Return item if it was taken by a non-survivor somehow - Updated lore to reflect Speed Boost only
+    give @s minecraft:potion{CustomModelData:3001,display:{Name:'{"text":"Adrenaline Shot","color":"aqua","italic":false}',Lore:['{"text":"Grants a quick burst of speed.","color":"gray"}','{"text":"Single use. Be wise.","color":"dark_gray"}]}} 1
     return 0
 }
 
 # --- Apply Effects ---
+# Behavior adjusted to be a "Speed Boost" as per subtask instructions. Regeneration removed.
 # Speed II for 7 seconds (140 ticks)
 effect give @s minecraft:speed 7 1 true
-# Regeneration I for 5 seconds (100 ticks)
-effect give @s minecraft:regeneration 5 0 true
+# Regeneration I for 5 seconds (100 ticks) - REMOVED
+# effect give @s minecraft:regeneration 5 0 true
 
 # --- Audiovisual Cues ---
 # Sound for using the shot
@@ -31,8 +32,8 @@ particle minecraft:composter ~ ~1 ~ 0.3 0.5 0.3 0.2 15 # "Green sparks" for vita
 # This is a single-use item, so clear it.
 clear @s minecraft:potion{CustomModelData:3001} 1
 
-tellraw @s ["",{"text":"[ITEM] ","color":"aqua"},{"text":"You used the ","color":"white"},{"text":"Adrenaline Shot","color":"aqua"},{"text":"! Feel the rush!","color":"white"}]
-title @s actionbar {"text":"Adrenaline Rush! Speed & Regen active!","color":"aqua"}
+tellraw @s ["",{"text":"[ITEM] ","color":"aqua"},{"text":"You used the ","color":"white"},{"text":"Adrenaline Shot","color":"aqua"},{"text":"! Speed boost activated!","color":"white"}]
+title @s actionbar {"text":"Adrenaline Rush! Speed active!","color":"aqua"}
 
 # Tag player as having used the shot, for GUI purposes
 tag @s add used_adrenaline_shot

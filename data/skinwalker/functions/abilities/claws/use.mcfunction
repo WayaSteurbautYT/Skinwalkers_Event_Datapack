@@ -112,7 +112,7 @@ title @s actionbar ["",
     {"text":"] ","color":"dark_red"},
     {"text":"Claws used! ","color":"red"},
     {"text":"(","color":"gray"},
-    {"text":"5s cooldown","color":"yellow"},
+    {"text":"1s cooldown","color":"yellow"},
     {"text":")","color":"gray"}
 ]
 

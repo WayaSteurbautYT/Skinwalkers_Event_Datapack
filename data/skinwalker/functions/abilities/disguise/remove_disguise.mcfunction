@@ -68,10 +68,10 @@ execute at @s run {
     particle minecraft:flame ~ ~1 ~ 0.5 1 0.5 0.05 100
 }
 
-# Cooldown is handled by the 'use' function. No cooldown setting here.
-# scoreboard players operation @s skinwalker.disguise_cooldown = @s skinwalker.disguise_cooldown_max
-# title @s title ["",{"text":"DISGUISE COOLDOWN","color":"gold"}]
-# title @s subtitle ["",{"text":"You can disguise again in 15 seconds","color":"yellow"}]
+# Set cooldown for disguise - 30 seconds
+scoreboard players operation @s skinwalker.disguise_cooldown = @s skinwalker.disguise_cooldown_max
+# title @s title ["",{"text":"DISGUISE COOLDOWN","color":"gold"}] # This title might be too intrusive
+# title @s subtitle ["",{"text":"You can disguise again in 30 seconds","color":"yellow"}]
 
 # Clear the stored name of who they were disguised as from their NBT
 data remove entity @s DisguisedAsName
@@ -80,7 +80,7 @@ data remove storage skinwalker:temp TempDisguisedAsName
 
 
 # Update action bar
-title @s actionbar ["",{"text":"Disguise removed! ","color":"red"},{"text":"Cooldown: ","color":"gray"},{"text":"15s","color":"gold"}]
+title @s actionbar ["",{"text":"Disguise removed! ","color":"red"},{"text":"Cooldown: ","color":"gray"},{"text":"30s","color":"gold"}]
 
 # Log the action in console
 tellraw @a[tag=op] ["",{"text":"[","color":"dark_gray"},{"text":"Skinwalker","color":"dark_red"},{"text":"] ","color":"dark_gray"},{"selector":"@s"},{"text":" removed their disguise","color":"gray"}]

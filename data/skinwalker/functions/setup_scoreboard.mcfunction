@@ -9,6 +9,7 @@ scoreboard objectives remove skinwalker.ability_cooldown
 scoreboard objectives remove skinwalker.ability_duration
 scoreboard objectives remove skinwalker.temp
 scoreboard objectives remove skinwalker.sidebar
+scoreboard objectives remove bot_phase_cooldown
 
 # Create objectives
 scoreboard objectives add skinwalker.role dummy "Role"
@@ -29,6 +30,7 @@ scoreboard objectives add skinwalker.claws_cooldown dummy "Claws Cooldown"
 scoreboard objectives add skinwalker.claws_cooldown_max dummy "Claws Max Cooldown"
 scoreboard objectives add skinwalker.infection_timer dummy "Infection Timer"
 scoreboard objectives add playerCount dummy "Player Count" # Added for assign_roles
+scoreboard objectives add bot_phase_cooldown dummy "Bot Phase Cooldown" # For Bot Skinwalker AI
 
 
 # Create sidebar display
