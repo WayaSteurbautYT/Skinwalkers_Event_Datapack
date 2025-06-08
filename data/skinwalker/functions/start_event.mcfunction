@@ -36,14 +36,16 @@ function skinwalker:assign_roles
 scoreboard objectives setdisplay sidebar skinwalker.role # Keep for now, ensure assign_roles doesn't conflict
 
 # Give initial items and effects - This is called by assign_roles via give_initial_items path.
-# function skinwalker:give_initial_items # REMOVE - Redundant if assign_roles handles it.
+# The call below was commented out, which is correct as assign_roles handles it.
+# # function skinwalker:give_initial_items # REMOVE - Redundant if assign_roles handles it.
 
 # Start Phase 1
 # assign_roles should have set #phase to 0 or similar initial state.
 # phase1/setup will set #phase to 1 and call phase1/start.
-function skinwalker:phase1/setup # This sets #phase to 1 and schedules phase1/start
-# scoreboard players set #phase skinwalker.phase 1 # This is done in phase1/setup
-# function skinwalker:phase1/start # This is scheduled by phase1/setup or game/start
+function skinwalker:phase1/setup # This should set #phase to 1 and schedule/call phase1/start
+# The lines below are commented out, assuming phase1/setup correctly handles them.
+# # scoreboard players set #phase skinwalker.phase 1 # This is done in phase1/setup
+# # function skinwalker:phase1/start # This is scheduled by phase1/setup or game/start
 
 # Notify players (Much of this is also in phase1/start and phase1/setup)
 # Consolidate startup messages within those phase files.

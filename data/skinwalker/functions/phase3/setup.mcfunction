@@ -58,3 +58,7 @@ worldborder damage buffer 5
 
 # Update scoreboard
 function skinwalker:gui/update_scoreboard
+
+# Trigger Phase 3 narrative warnings
+function skinwalker:events/warnings/run
+schedule function skinwalker:events/skinwalker_dialogue/plan_sequence_1_part1 10s

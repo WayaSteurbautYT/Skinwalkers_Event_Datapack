@@ -1,6 +1,9 @@
 # Main game loop - runs every tick
 # This is the core loop that manages all game mechanics
 
+# Handle start trigger
+execute as @a[scores={skinwalker_trigger=1..}] run function skinwalker:start_trigger_handler
+
 # Update player counts
 execute store result score #survivors_alive skinwalker.temp run tag @a[tag=survivor] list
 execute store result score #skinwalkers_alive skinwalker.temp run tag @a[tag=skinwalker] list
